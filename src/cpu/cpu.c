@@ -142,7 +142,7 @@ uint8_t cpu_write(uint16_t addr, uint8_t data) {
  * @param void
  * @return void
  */
-void cpu_exec() {
+void cpu_exec(void) {
     debug_print("(cpu_exec) cycles: %d, mem: %p\n", cycles, (void*)mem_ptr);
 
     int8_t fetched;

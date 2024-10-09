@@ -6,6 +6,7 @@
 
 void interface_display_cpu(void);
 void interface_display_mem(void);
+void interface_display_zeropage(void);
 void interface_display_header(void);
 
 #endif

@@ -40,7 +40,7 @@ uint8_t cpu_extract_sr(uint8_t flag);
 uint8_t cpu_mod_sr(uint8_t flag, uint8_t val);
 uint8_t cpu_fetch(uint16_t addr);
 uint8_t cpu_write(uint16_t addr, uint8_t data);
-void cpu_exec();
+void cpu_exec(void);
 void cpu_init(void);
 
 #endif
