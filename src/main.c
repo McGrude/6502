@@ -40,6 +40,10 @@ int main(int argc, char** argv) {
     
     interface_display_header();
     wrefresh(win);
+
+    uint32_t rows,cols;
+    getmaxyx(win,rows,cols);
+    mvprintw(0,80,"W:%d H:%d",cols,rows);
     
     do {
       interface_display_cpu();
