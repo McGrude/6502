@@ -43,12 +43,13 @@ int main(int argc, char** argv) {
 
     uint32_t rows,cols;
     getmaxyx(win,rows,cols);
-    mvprintw(0,80,"W:%d H:%d",cols,rows);
+    mvprintw(1,0,"W:%d H:%d",cols,rows);
     
     do {
       interface_display_cpu();
       //interface_display_mem();
       interface_display_zeropage();
+      interface_display_page(26,1,0x8020);
       wrefresh(win);
       kinput_listen();
     } while (!kinput_should_quit());
