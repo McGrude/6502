@@ -1,18 +1,27 @@
 
+unify memory struct to only be one 64k byte array
+fix references to zero_page, stack, last_six struct members
+
+
+--
 
 Arguments
 
 -L <addr>=<file>
 -L <addr>=<file>
 
+   Load file starting at adress
+   6502 -L 0xFD00=rom.bin -L 0x8000=program.obj
 
-Load file starting at adress
-6502 -L 0xFD00=rom.bin -L 0x8000=program.obj
-
-Show page address for p2 and p3
+? Show page address for p2 and p3
 6502 -p2 0x80 -p3 0xFF
 
+something like that.
 
 ----
 
-page's also show ascii representation of memory
+page display will also show ascii representation of memory
+
+---
+
+
