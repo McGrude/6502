@@ -38,7 +38,8 @@ static void load_program(char* path) {
     size_t fsize = st.st_size;
 
     size_t bytes_read =
-        fread(memory.data + (0x8000 - 0x0200), 1, sizeof(memory.data), fp);
+      //fread(memory.data + (0x8000 - 0x0200), 1, sizeof(memory.data), fp);
+      fread(memory.data + (0x8000), 1, sizeof(memory.data), fp);
 
     if (bytes_read != fsize) {
         fprintf(
@@ -62,12 +63,19 @@ void mem_init(char* filename) {
     memset(memory.data, 0, sizeof(memory.data));
 
     // im not really sure about this
-    memory.last_six[0] = 0xA;
-    memory.last_six[1] = 0xB;
-    memory.last_six[2] = 0xC;
-    memory.last_six[3] = 0xD;
-    memory.last_six[4] = 0xE;
-    memory.last_six[5] = 0xF;
+    //memory.last_six[0] = 0xA;
+    //memory.last_six[1] = 0xB;
+    //memory.last_six[2] = 0xC;
+    //memory.last_six[3] = 0xD;
+    //memory.last_six[4] = 0xE;
+    //memory.last_six[5] = 0xF;
+
+    // The 6502 reset vector is stored at 0xFFFC and 0xFFFD.
+    // The CPU jumps to the address stored there at reset.
+
+    // store 0x8000 at 6502 reset vector.
+    memory.data[0xFFFC] = 0x00;
+    memory.data[0xFFFD] = 0x80;
 
     if (filename == NULL) {
         fprintf(stderr, "[FAILED] No binary program was provided.\n");
@@ -119,13 +127,13 @@ int mem_dump(void) {
         return 1;
     }
 
-    wb = fwrite(memory.last_six, 1, sizeof(memory.last_six), fp);
-
-    if (wb != sizeof(memory.last_six)) {
-        printf("[FAILED] Errors while dumping the last six reserved bytes.\n");
-        fclose(fp);
-        return 1;
-    }
+    //wb = fwrite(memory.last_six, 1, sizeof(memory.last_six), fp);
+    //
+    // if (wb != sizeof(memory.last_six)) {
+    //    printf("[FAILED] Errors while dumping the last six reserved bytes.\n");
+    //    fclose(fp);
+    //    return 1;
+    //}
 
     fclose(fp);
     return 0;

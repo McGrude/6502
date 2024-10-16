@@ -1,0 +1,18 @@
+
+
+Arguments
+
+-L <addr>=<file>
+-L <addr>=<file>
+
+
+Load file starting at adress
+6502 -L 0xFD00=rom.bin -L 0x8000=program.obj
+
+Show page address for p2 and p3
+6502 -p2 0x80 -p3 0xFF
+
+
+----
+
+page's also show ascii representation of memory

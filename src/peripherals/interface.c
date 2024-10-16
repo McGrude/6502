@@ -78,27 +78,28 @@ void interface_display_zeropage(void) {
 void interface_display_page(uint8_t y_loc, uint8_t x_loc, uint16_t addr) {
   struct mem* mp = mem_get_ptr();
 
-  uint16_t page = addr & (uint16_t)0xFF00;
+  //  uint16_t page = (addr - 0x0200) & (uint16_t)0xFF00;
+  uint16_t page = (addr) & (uint16_t)0xFF00;
   
   //  mvprintw( y_loc , x_loc, "%04X:",page);
-  mvprintw( y_loc+1 , x_loc, "%04X : 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F",page);
+  mvprintw( y_loc+1 , x_loc, "%04X | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F",page);
   mvprintw( y_loc+2 , x_loc, "     +------------------------------------------------");
-  mvprintw( y_loc+3 , x_loc, "  00 : ");
-  mvprintw( y_loc+4 , x_loc, "  10 : ");
-  mvprintw( y_loc+5 , x_loc, "  20 : ");
-  mvprintw( y_loc+6 , x_loc, "  30 : ");
-  mvprintw( y_loc+7 , x_loc, "  40 : ");
-  mvprintw( y_loc+8 , x_loc, "  50 : ");
-  mvprintw( y_loc+9 , x_loc, "  60 : ");
-  mvprintw( y_loc+10, x_loc, "  70 : ");
-  mvprintw( y_loc+11, x_loc, "  80 : ");
-  mvprintw( y_loc+12, x_loc, "  90 : ");
-  mvprintw( y_loc+13, x_loc, "  A0 : ");
-  mvprintw( y_loc+14, x_loc, "  B0 : ");
-  mvprintw( y_loc+15, x_loc, "  C0 : ");
-  mvprintw( y_loc+16, x_loc, "  D0 : ");
-  mvprintw( y_loc+17, x_loc, "  E0 : ");
-  mvprintw( y_loc+18, x_loc, "  F0 : ");
+  mvprintw( y_loc+3 , x_loc, "  00 | ");
+  mvprintw( y_loc+4 , x_loc, "  10 | ");
+  mvprintw( y_loc+5 , x_loc, "  20 | ");
+  mvprintw( y_loc+6 , x_loc, "  30 | ");
+  mvprintw( y_loc+7 , x_loc, "  40 | ");
+  mvprintw( y_loc+8 , x_loc, "  50 | ");
+  mvprintw( y_loc+9 , x_loc, "  60 | ");
+  mvprintw( y_loc+10, x_loc, "  70 | ");
+  mvprintw( y_loc+11, x_loc, "  80 | ");
+  mvprintw( y_loc+12, x_loc, "  90 | ");
+  mvprintw( y_loc+13, x_loc, "  A0 | ");
+  mvprintw( y_loc+14, x_loc, "  B0 | ");
+  mvprintw( y_loc+15, x_loc, "  C0 | ");
+  mvprintw( y_loc+16, x_loc, "  D0 | ");
+  mvprintw( y_loc+17, x_loc, "  E0 | ");
+  mvprintw( y_loc+18, x_loc, "  F0 | ");
   
   uint8_t y = y_loc+3;
   uint8_t x = x_loc+7;
@@ -151,7 +152,8 @@ void interface_display_mem(void) {
     y += 2;
     x = 3;
 
-    for (uint16_t i = 0x8000 - 0x0200; i < 0x8000 - 0x0200 + 256; i++) {
+    //for (uint16_t i = 0x8000 - 0x0200; i < 0x8000 - 0x0200 + 256; i++) {
+    for (uint16_t i = 0x8000; i < 0x8000 + 256; i++) {
         mvprintw(y, x, "%02X ", mp->data[i]);
         if (x % WIN_ROWS == 0) {
             y += 1;

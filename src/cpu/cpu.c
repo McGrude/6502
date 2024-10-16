@@ -79,14 +79,16 @@ static int8_t get_mem(uint16_t addr) {
 
     // no need to check >= 0x0000, it's unsigned
     if (addr <= 0x00FF) {
-        return mem_ptr->zero_page[addr];
+      return mem_ptr->zero_page[addr];
     } else if (addr >= 0x0100 && addr <= 0x01FF) {
-        return mem_ptr->stack[addr - 0x0100];
-    } else if (addr >= 0xFFFA) {
-        return mem_ptr->last_six[addr - 0xFDFA];
+      return mem_ptr->stack[addr - 0x0100];
+      //} else if (addr >= 0xFFFA) {
+      //return mem_ptr->last_six[addr - 0xFDFA];
     } else {
-        debug_print("(get_mem) parsed: 0x%X\n", addr - 0x0200);
-        return mem_ptr->data[addr - 0x0200];
+      //debug_print("(get_mem) parsed: 0x%X\n", addr - 0x0200);
+      //return mem_ptr->data[addr - 0x0200];
+      debug_print("(get_mem) parsed: 0x%X\n", addr);
+      return mem_ptr->data[addr];
     }
 }
 
@@ -97,20 +99,21 @@ static int8_t get_mem(uint16_t addr) {
  * @return 0 if success, 1 if failure
  */
 static uint8_t write_mem(uint16_t addr, uint8_t data) {
-    // this yields "warning: comparison is always true due to limited range of
-    // data type" if (!(addr >= 0x0000 && addr <= 0xFFFF)) return 1;
+  // this yields "warning: comparison is always true due to limited range of
+  // data type" if (!(addr >= 0x0000 && addr <= 0xFFFF)) return 1;
 
-    if (addr <= 0x00FF) {
-        mem_ptr->zero_page[addr] = data;
-    } else if (addr >= 0x0100 && addr <= 0x01FF) {
-        mem_ptr->stack[addr - 0x0100] = data;
-    } else if (addr >= 0xFFFA) {
-        mem_ptr->last_six[addr - 0xFDFA] = data;
-    } else {
-        mem_ptr->data[addr - 0x0200] = data;
-    }
-
-    return 0;
+  if (addr <= 0x00FF) {
+    mem_ptr->zero_page[addr] = data;
+  } else if (addr >= 0x0100 && addr <= 0x01FF) {
+    mem_ptr->stack[addr - 0x0100] = data;
+    //} else if (addr >= 0xFFFA) {
+    //    mem_ptr->last_six[addr - 0xFDFA] = data;
+  } else {
+    //mem_ptr->data[addr - 0x0200] = data;
+    mem_ptr->data[addr] = data;
+  }
+  
+  return 0;
 }
 
 /**
