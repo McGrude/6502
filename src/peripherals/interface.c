@@ -37,42 +37,42 @@ void interface_display_cpu(void) {
 }
 
 
-#define ZP_WIN_X 0 // 0
-#define ZP_WIN_Y 6 // 5
-void interface_display_zeropage(void) {
-  struct mem* mp = mem_get_ptr();
-  mvprintw( ZP_WIN_Y   , ZP_WIN_X, "Zero Page:");
-  mvprintw( ZP_WIN_Y+1 , ZP_WIN_X, "     00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F");
-  mvprintw( ZP_WIN_Y+2 , ZP_WIN_X, "   +------------------------------------------------");
-  mvprintw( ZP_WIN_Y+3 , ZP_WIN_X, "00 : ");
-  mvprintw( ZP_WIN_Y+4 , ZP_WIN_X, "10 : ");
-  mvprintw( ZP_WIN_Y+5 , ZP_WIN_X, "20 : ");
-  mvprintw( ZP_WIN_Y+6 , ZP_WIN_X, "30 : ");
-  mvprintw( ZP_WIN_Y+7 , ZP_WIN_X, "40 : ");
-  mvprintw( ZP_WIN_Y+8 , ZP_WIN_X, "50 : ");
-  mvprintw( ZP_WIN_Y+9 , ZP_WIN_X, "60 : ");
-  mvprintw( ZP_WIN_Y+10, ZP_WIN_X, "70 : ");
-  mvprintw( ZP_WIN_Y+11, ZP_WIN_X, "80 : ");
-  mvprintw( ZP_WIN_Y+12, ZP_WIN_X, "90 : ");
-  mvprintw( ZP_WIN_Y+13, ZP_WIN_X, "A0 : ");
-  mvprintw( ZP_WIN_Y+14, ZP_WIN_X, "B0 : ");
-  mvprintw( ZP_WIN_Y+15, ZP_WIN_X, "C0 : ");
-  mvprintw( ZP_WIN_Y+16, ZP_WIN_X, "D0 : ");
-  mvprintw( ZP_WIN_Y+17, ZP_WIN_X, "E0 : ");
-  mvprintw( ZP_WIN_Y+18, ZP_WIN_X, "F0 : ");
-  
-  uint8_t x = ZP_WIN_X+5;
-  uint8_t y = ZP_WIN_Y+3;
-  for ( uint16_t index = 0 ; index < 256; index++ ) {
-    mvprintw(y, x, "%02X", mp->zero_page[index]);
-    if ( index != 0 && (index+1) % 16 == 0 ) {
-      y += 1;
-      x = ZP_WIN_X+5;
-    } else {
-      x += 3;
-    }
-  }
-}
+//#define ZP_WIN_X 0 // 0
+//#define ZP_WIN_Y 6 // 5
+//void interface_display_zeropage(void) {
+//  struct mem* mp = mem_get_ptr();
+//  mvprintw( ZP_WIN_Y   , ZP_WIN_X, "Zero Page:");
+//  mvprintw( ZP_WIN_Y+1 , ZP_WIN_X, "     00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F");
+//  mvprintw( ZP_WIN_Y+2 , ZP_WIN_X, "   +------------------------------------------------");
+//  mvprintw( ZP_WIN_Y+3 , ZP_WIN_X, "00 : ");
+//  mvprintw( ZP_WIN_Y+4 , ZP_WIN_X, "10 : ");
+//  mvprintw( ZP_WIN_Y+5 , ZP_WIN_X, "20 : ");
+//  mvprintw( ZP_WIN_Y+6 , ZP_WIN_X, "30 : ");
+//  mvprintw( ZP_WIN_Y+7 , ZP_WIN_X, "40 : ");
+//  mvprintw( ZP_WIN_Y+8 , ZP_WIN_X, "50 : ");
+//  mvprintw( ZP_WIN_Y+9 , ZP_WIN_X, "60 : ");
+//  mvprintw( ZP_WIN_Y+10, ZP_WIN_X, "70 : ");
+//  mvprintw( ZP_WIN_Y+11, ZP_WIN_X, "80 : ");
+//  mvprintw( ZP_WIN_Y+12, ZP_WIN_X, "90 : ");
+//  mvprintw( ZP_WIN_Y+13, ZP_WIN_X, "A0 : ");
+//  mvprintw( ZP_WIN_Y+14, ZP_WIN_X, "B0 : ");
+//  mvprintw( ZP_WIN_Y+15, ZP_WIN_X, "C0 : ");
+//  mvprintw( ZP_WIN_Y+16, ZP_WIN_X, "D0 : ");
+//  mvprintw( ZP_WIN_Y+17, ZP_WIN_X, "E0 : ");
+//  mvprintw( ZP_WIN_Y+18, ZP_WIN_X, "F0 : ");
+//  
+//  uint8_t x = ZP_WIN_X+5;
+//  uint8_t y = ZP_WIN_Y+3;
+//  for ( uint16_t index = 0 ; index < 256; index++ ) {
+//    mvprintw(y, x, "%02X", mp->zero_page[index]);
+//    if ( index != 0 && (index+1) % 16 == 0 ) {
+//      y += 1;
+//      x = ZP_WIN_X+5;
+//    } else {
+//      x += 3;
+//    }
+//  }
+//}
 
 
 void interface_display_page(uint8_t y_loc, uint8_t x_loc, uint16_t addr) {
@@ -83,7 +83,7 @@ void interface_display_page(uint8_t y_loc, uint8_t x_loc, uint16_t addr) {
   
   //  mvprintw( y_loc , x_loc, "%04X:",page);
   mvprintw( y_loc+1 , x_loc, "%04X | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F",page);
-  mvprintw( y_loc+2 , x_loc, "     +------------------------------------------------");
+  mvprintw( y_loc+2 , x_loc, "     +-------------------------------------------------");
   mvprintw( y_loc+3 , x_loc, "  00 | ");
   mvprintw( y_loc+4 , x_loc, "  10 | ");
   mvprintw( y_loc+5 , x_loc, "  20 | ");
@@ -113,55 +113,63 @@ void interface_display_page(uint8_t y_loc, uint8_t x_loc, uint16_t addr) {
       x += 3;
     }
   }
+
+  x_loc = x_loc+55;
+  mvprintw( y_loc+1 , x_loc, " 0123456789ABCDEF");
+  mvprintw( y_loc+2 , x_loc, "+----------------+");
+  for ( int i = 3; i <= 18; i ++ ) {
+    mvprintw( y_loc+i , x_loc, "|                |");
+  }
+  
 }
 
 
-void interface_display_mem(void) {
-    struct mem* mp = mem_get_ptr();
-    mvprintw(12, 3, "Zero Page:");
-
-    uint8_t x = 3;
-    uint8_t y = 14;
-    for (uint16_t i = 0; i < 256; i++) {
-        mvprintw(y, x, "%02X ", mp->zero_page[i]);
-        if (x % WIN_ROWS == 0) {
-            y += 1;
-            x = 3;
-        } else {
-            x += 3;
-        }
-    }
-
-    y += 2;
-    mvprintw(y, 3, "Stack:");
-    y += 2;
-    x = 3;
-
-    for (uint16_t i = 0; i < 256; i++) {
-        mvprintw(y, x, "%02X ", mp->stack[i]);
-        if (x % WIN_ROWS == 0) {
-            y += 1;
-            x = 3;
-        } else {
-            x += 3;
-        }
-    }
-
-    y += 2;
-    mvprintw(y, 3, "Program Data:");
-    y += 2;
-    x = 3;
-
-    //for (uint16_t i = 0x8000 - 0x0200; i < 0x8000 - 0x0200 + 256; i++) {
-    for (uint16_t i = 0x8000; i < 0x8000 + 256; i++) {
-        mvprintw(y, x, "%02X ", mp->data[i]);
-        if (x % WIN_ROWS == 0) {
-            y += 1;
-            x = 3;
-        } else {
-            x += 3;
-        }
-    }
-
-    mvprintw(y + 2, 3, "[...]");
-}
+//void interface_display_mem(void) {
+//    struct mem* mp = mem_get_ptr();
+    //    mvprintw(12, 3, "Zero Page:");
+//
+//    uint8_t x = 3;
+//    uint8_t y = 14;
+//    for (uint16_t i = 0; i < 256; i++) {
+//        mvprintw(y, x, "%02X ", mp->zero_page[i]);
+//        if (x % WIN_ROWS == 0) {
+//            y += 1;
+//            x = 3;
+//        } else {
+//            x += 3;
+//        }
+//    }
+//
+//    y += 2;
+//    mvprintw(y, 3, "Stack:");
+//    y += 2;
+//    x = 3;
+//
+//    for (uint16_t i = 0; i < 256; i++) {
+//        mvprintw(y, x, "%02X ", mp->stack[i]);
+//        if (x % WIN_ROWS == 0) {
+//            y += 1;
+//            x = 3;
+//        } else {
+//          x += 3;
+//        }
+//    }
+//
+//    y += 2;
+//    mvprintw(y, 3, "Program Data:");
+//    y += 2;
+//    x = 3;
+//
+//    //for (uint16_t i = 0x8000 - 0x0200; i < 0x8000 - 0x0200 + 256; i++) {
+//    for (uint16_t i = 0x8000; i < 0x8000 + 256; i++) {
+//        mvprintw(y, x, "%02X ", mp->data[i]);
+//        if (x % WIN_ROWS == 0) {
+//            y += 1;
+//            x = 3;
+//        } else {
+//            x += 3;
+//        }
+//    }
+//
+//    mvprintw(y + 2, 3, "[...]");
+//}

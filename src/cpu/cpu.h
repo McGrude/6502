@@ -4,25 +4,25 @@
 #include <stdint.h>
 
 struct central_processing_unit {
-    uint16_t pc;
-    uint8_t sp;
-    uint8_t ac;
-    uint8_t x;
-    uint8_t y;
-
-    /*
-     * Status Register:
-     *
-     * bit 0: Carry
-     * bit 1: Zero
-     * bit 2: Interrupt
-     * bit 3: Decimal
-     * bit 4: Break
-     * bit 5: 0
-     * bit 6: Overflow (V)
-     * bit 7: Negative
-     * */
-    uint8_t sr;
+  uint16_t pc;
+  uint8_t sp;
+  uint8_t ac;
+  uint8_t x;
+  uint8_t y;
+  
+  /*
+   * Status Register:
+   *
+   * bit 0: Carry
+   * bit 1: Zero
+   * bit 2: Interrupt
+   * bit 3: Decimal
+   * bit 4: Break
+   * bit 5: 0
+   * bit 6: Overflow (V)
+   * bit 7: Negative
+   * */
+  uint8_t sr;
 };
 
 #define C 0

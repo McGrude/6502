@@ -46,19 +46,11 @@ int main(int argc, char** argv) {
       exit(1);
     }
     
-    //    if ( can_change_color() == FALSE ) {
-    //      endwin();
-    //      fprintf(stderr, "\n\n[FAILED] Your terminal does not support color changes\n");
-    //      exit(1);
-    //    }
-    
     start_color();
     init_pair(1, COLOR_WHITE,COLOR_BLACK);
-    
    
     curs_set(0);
     noecho();
-    // box(win, 0, 0);
     wrefresh(win);
     interface_display_header();
     wrefresh(win);
@@ -68,10 +60,10 @@ int main(int argc, char** argv) {
     
     do {
       interface_display_cpu();
-      //interface_display_mem();
-      interface_display_zeropage();
-      interface_display_page(26,1,0x8000);
-      interface_display_page(26,58,0xFF00);
+      interface_display_page(7,1,0x0000);   // zero_page
+      interface_display_page(7,76,0x0100);  // stack
+      interface_display_page(26,1,0x8000);  //
+      interface_display_page(26,76,0xFF00); //
       
       wrefresh(win);
       kinput_listen();

@@ -26,29 +26,25 @@ struct mem memory;
  * @return void
  * */
 static void load_program(char* path) {
-    FILE* fp = fopen(path, "rb");
+  FILE* fp = fopen(path, "rb");
+  
+  if (fp == NULL) {
+    fprintf(stderr, "[FAILED] Error while loading provided file.\n");
+    exit(1);
+  }
+  
+  struct stat st;
+  stat(path, &st);
+  size_t fsize = st.st_size;
 
-    if (fp == NULL) {
-        fprintf(stderr, "[FAILED] Error while loading provided file.\n");
-        exit(1);
-    }
-
-    struct stat st;
-    stat(path, &st);
-    size_t fsize = st.st_size;
-
-    size_t bytes_read =
-      //fread(memory.data + (0x8000 - 0x0200), 1, sizeof(memory.data), fp);
-      fread(memory.data + (0x8000), 1, sizeof(memory.data), fp);
-
-    if (bytes_read != fsize) {
-        fprintf(
-            stderr,
-            "[FAILED] Amount of bytes read doesn't match read file size.\n");
-        exit(1);
-    }
-
-    fclose(fp);
+  size_t bytes_read = fread(memory.data + (0x8000), 1, sizeof(memory.data), fp);
+  
+  if (bytes_read != fsize) {
+    fprintf( stderr, "[FAILED] Amount of bytes read doesn't match read file size.\n");
+    exit(1);
+  }
+  
+  fclose(fp);
 }
 
 /**
@@ -58,39 +54,33 @@ static void load_program(char* path) {
  * @return void
  * */
 void mem_init(char* filename) {
-    memset(memory.zero_page, 0, sizeof(memory.zero_page));
-    memset(memory.stack, 0, sizeof(memory.stack));
-    memset(memory.data, 0, sizeof(memory.data));
+  //memset(memory.zero_page, 0, sizeof(memory.zero_page));
+  //  memset(memory.stack, 0, sizeof(memory.stack));
+  memset(memory.data, 0, sizeof(memory.data));
 
-    // im not really sure about this
-    //memory.last_six[0] = 0xA;
-    //memory.last_six[1] = 0xB;
-    //memory.last_six[2] = 0xC;
-    //memory.last_six[3] = 0xD;
-    //memory.last_six[4] = 0xE;
-    //memory.last_six[5] = 0xF;
-
-    // The 6502 reset vector is stored at 0xFFFC and 0xFFFD.
-    // The CPU jumps to the address stored there at reset.
-
-    // store 0x8000 at 6502 reset vector.
-    memory.data[0xFFFC] = 0x00;
-    memory.data[0xFFFD] = 0x80;
-
-    if (filename == NULL) {
-        fprintf(stderr, "[FAILED] No binary program was provided.\n");
-        exit(1);
-    } else {
-        load_program(filename);
-    }
+  // The 6502 reset vector is stored at 0xFFFC and 0xFFFD.  The CPU
+  // jumps to the address stored there at reset.
+  
+  // store 0x8000 at 6502 reset vector.  We'll remove later when
+  // we have more binary loading in place.  We'll load a "rom"
+  // in that space and it will store the reset vector @0xFFFC
+  memory.data[0xFFFC] = 0x00;
+  memory.data[0xFFFD] = 0x80;
+  
+  if (filename == NULL) {
+    fprintf(stderr, "[FAILED] No binary program was provided.\n");
+    exit(1);
+  } else {
+    load_program(filename);
+  }
 }
 
 /**
  * mem_get_ptr: returns pointer to currently active memory struct
  * */
 struct mem* mem_get_ptr(void) {
-    struct mem* mp = &memory;
-    return mp;
+  struct mem* mp = &memory;
+  return mp;
 }
 
 /**
@@ -100,41 +90,16 @@ struct mem* mem_get_ptr(void) {
  * @return 0 if success, 1 if fail
  * */
 int mem_dump(void) {
-    // 100% there's a better way to do this
-
-    FILE* fp = fopen("dump.bin", "wb+");
-    if (fp == NULL) return 1;
-
-    size_t wb = fwrite(memory.zero_page, 1, sizeof(memory.zero_page), fp);
-    if (wb != sizeof(memory.zero_page)) {
-        printf("[FAILED] Errors while dumping the zero page.\n");
-        fclose(fp);
-        return 1;
-    }
-    wb = fwrite(memory.stack, 1, sizeof(memory.stack), fp);
-
-    if (wb != sizeof(memory.stack)) {
-        printf("[FAILED] Errors while dumping the system stack.\n");
-        fclose(fp);
-        return 1;
-    }
-
-    wb = fwrite(memory.data, 1, sizeof(memory.data), fp);
-
-    if (wb != sizeof(memory.data)) {
-        printf("[FAILED] Errors while dumping the program data.\n");
-        fclose(fp);
-        return 1;
-    }
-
-    //wb = fwrite(memory.last_six, 1, sizeof(memory.last_six), fp);
-    //
-    // if (wb != sizeof(memory.last_six)) {
-    //    printf("[FAILED] Errors while dumping the last six reserved bytes.\n");
-    //    fclose(fp);
-    //    return 1;
-    //}
-
+  FILE* fp = fopen("dump.bin", "wb+");
+  if (fp == NULL) return 1;
+  
+  size_t wb = fwrite(memory.data, 1, sizeof(memory.data), fp);
+  if (wb != sizeof(memory.data)) {
+    printf("[FAILED] Errors while dumping the program data.\n");
     fclose(fp);
-    return 0;
+    return 1;
+  }
+  
+  fclose(fp);
+  return 0;
 }

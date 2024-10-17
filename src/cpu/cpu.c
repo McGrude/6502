@@ -41,18 +41,18 @@ uint8_t cpu_extract_sr(uint8_t flag) { return ((cpu.sr >> (flag % 8)) & 1); }
  * @return 0 if success, 1 if failure
  */
 uint8_t cpu_mod_sr(uint8_t flag, uint8_t val) {
-    if (val != 0 && val != 1) return 1;
-
-    if (flag > 0 && flag < 8 && flag != 5) {
-        if (val == 1) {
-            SET_BIT(cpu.sr, flag);
-        } else {
-            CLEAR_BIT(cpu.sr, flag);
-        }
-        return 0;
+  if (val != 0 && val != 1) return 1;
+  
+  if (flag > 0 && flag < 8 && flag != 5) {
+    if (val == 1) {
+      SET_BIT(cpu.sr, flag);
     } else {
-        return 1;
+      CLEAR_BIT(cpu.sr, flag);
     }
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 /**
@@ -62,9 +62,9 @@ uint8_t cpu_mod_sr(uint8_t flag, uint8_t val) {
  * @return void
  * */
 void cpu_reset(void) {
-    reset();
-
-    cycles = 8;
+  reset();
+  
+  cycles = 8;
 }
 
 /**
@@ -73,23 +73,24 @@ void cpu_reset(void) {
  * @return The retrieved data
  */
 static int8_t get_mem(uint16_t addr) {
-    // this yields "warning: comparison is always true due to limited range of
-    // data type" if (!(addr >= 0x0000 && addr <= 0xFFFF)) return -1;
-    debug_print("(get_mem) reading at: 0x%X\n", addr);
-
-    // no need to check >= 0x0000, it's unsigned
-    if (addr <= 0x00FF) {
-      return mem_ptr->zero_page[addr];
-    } else if (addr >= 0x0100 && addr <= 0x01FF) {
-      return mem_ptr->stack[addr - 0x0100];
-      //} else if (addr >= 0xFFFA) {
-      //return mem_ptr->last_six[addr - 0xFDFA];
-    } else {
-      //debug_print("(get_mem) parsed: 0x%X\n", addr - 0x0200);
-      //return mem_ptr->data[addr - 0x0200];
-      debug_print("(get_mem) parsed: 0x%X\n", addr);
-      return mem_ptr->data[addr];
-    }
+  // this yields "warning: comparison is always true due to limited range of
+  // data type" if (!(addr >= 0x0000 && addr <= 0xFFFF)) return -1;
+  //debug_print("(get_mem) reading at: 0x%X\n", addr);
+  
+  // no need to check >= 0x0000, it's unsigned
+  //if (addr <= 0x00FF) {
+  //      return mem_ptr->zero_page[addr];
+  //    } else if (addr >= 0x0100 && addr <= 0x01FF) {
+  //return mem_ptr->stack[addr - 0x0100];
+  
+  //} else if (addr >= 0xFFFA) {
+  //return mem_ptr->last_six[addr - 0xFDFA];
+  //    } else {
+  //debug_print("(get_mem) parsed: 0x%X\n", addr - 0x0200);
+  //return mem_ptr->data[addr - 0x0200];
+  //      debug_print("(get_mem) parsed: 0x%X\n", addr);
+  return mem_ptr->data[addr];
+  //    }
 }
 
 /**
@@ -101,17 +102,17 @@ static int8_t get_mem(uint16_t addr) {
 static uint8_t write_mem(uint16_t addr, uint8_t data) {
   // this yields "warning: comparison is always true due to limited range of
   // data type" if (!(addr >= 0x0000 && addr <= 0xFFFF)) return 1;
-
-  if (addr <= 0x00FF) {
-    mem_ptr->zero_page[addr] = data;
-  } else if (addr >= 0x0100 && addr <= 0x01FF) {
-    mem_ptr->stack[addr - 0x0100] = data;
-    //} else if (addr >= 0xFFFA) {
-    //    mem_ptr->last_six[addr - 0xFDFA] = data;
-  } else {
-    //mem_ptr->data[addr - 0x0200] = data;
-    mem_ptr->data[addr] = data;
-  }
+  
+  //  if (addr <= 0x00FF) {
+  //    mem_ptr->zero_page[addr] = data;
+  //  } else if (addr >= 0x0100 && addr <= 0x01FF) {
+  //    mem_ptr->stack[addr - 0x0100] = data;
+  //} else if (addr >= 0xFFFA) {
+  //    mem_ptr->last_six[addr - 0xFDFA] = data;
+  //  } else {
+  //mem_ptr->data[addr - 0x0200] = data;
+  mem_ptr->data[addr] = data;
+  //  }
   
   return 0;
 }
@@ -122,12 +123,12 @@ static uint8_t write_mem(uint16_t addr, uint8_t data) {
  * @return void
  */
 uint8_t cpu_fetch(uint16_t addr) {
-    debug_print("(cpu_fetch) reading at: 0x%X\n", addr);
-    uint8_t data = get_mem(addr);
-    debug_print("(cpu_fetch) GOT: 0x%X\n", data);
-    if (addr == cpu.pc) cpu.pc++;
-
-    return data;
+  debug_print("(cpu_fetch) reading at: 0x%X\n", addr);
+  uint8_t data = get_mem(addr);
+  debug_print("(cpu_fetch) GOT: 0x%X\n", data);
+  if (addr == cpu.pc) cpu.pc++;
+  
+  return data;
 }
 
 /**
@@ -137,7 +138,7 @@ uint8_t cpu_fetch(uint16_t addr) {
  * @return 0 if success, 1 if failure
  */
 uint8_t cpu_write(uint16_t addr, uint8_t data) {
-    return write_mem(addr, data) == 1 ? 1 : 0;
+  return write_mem(addr, data) == 1 ? 1 : 0;
 }
 
 /**
@@ -146,18 +147,18 @@ uint8_t cpu_write(uint16_t addr, uint8_t data) {
  * @return void
  */
 void cpu_exec(void) {
-    debug_print("(cpu_exec) cycles: %d, mem: %p\n", cycles, (void*)mem_ptr);
-
-    int8_t fetched;
-    do {
-        debug_print("(loop) cycles: %d\n", cycles);
-        // executing in a take
-        if (cycles == 0) {
-            fetched = cpu_fetch(cpu.pc);
-
-            debug_print("(cpu_exec) fetched: 0x%X\n", fetched);
-            inst_exec(fetched, &cycles);
-        }
-        cycles--;
-    } while (cycles != 0);
+  debug_print("(cpu_exec) cycles: %d, mem: %p\n", cycles, (void*)mem_ptr);
+  
+  int8_t fetched;
+  do {
+    debug_print("(loop) cycles: %d\n", cycles);
+    // executing in a take
+    if (cycles == 0) {
+      fetched = cpu_fetch(cpu.pc);
+      
+      debug_print("(cpu_exec) fetched: 0x%X\n", fetched);
+      inst_exec(fetched, &cycles);
+    }
+    cycles--;
+  } while (cycles != 0);
 }
