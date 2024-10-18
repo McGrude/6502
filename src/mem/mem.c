@@ -36,7 +36,7 @@ static void load_program(char* path) {
   struct stat st;
   stat(path, &st);
   size_t fsize = st.st_size;
-
+  
   size_t bytes_read = fread(memory.data + (0x8000), 1, sizeof(memory.data), fp);
   
   if (bytes_read != fsize) {
@@ -54,16 +54,14 @@ static void load_program(char* path) {
  * @return void
  * */
 void mem_init(char* filename) {
-  //memset(memory.zero_page, 0, sizeof(memory.zero_page));
-  //  memset(memory.stack, 0, sizeof(memory.stack));
   memset(memory.data, 0, sizeof(memory.data));
-
   // The 6502 reset vector is stored at 0xFFFC and 0xFFFD.  The CPU
   // jumps to the address stored there at reset.
   
-  // store 0x8000 at 6502 reset vector.  We'll remove later when
+  // Store 0x8000 at 6502 reset vector.  We'll remove later when
   // we have more binary loading in place.  We'll load a "rom"
   // in that space and it will store the reset vector @0xFFFC
+  
   memory.data[0xFFFC] = 0x00;
   memory.data[0xFFFD] = 0x80;
   

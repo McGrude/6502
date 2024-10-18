@@ -7,6 +7,10 @@
 #include "peripherals/interface.h"
 #include "peripherals/kinput.h"
 
+
+#define MIN_COLUMNS 150
+#define MIN_ROWS 50
+
 uint8_t DEBUG = 0;
 
 int main(int argc, char** argv) {
@@ -24,22 +28,27 @@ int main(int argc, char** argv) {
       exit(1);
     }
 
-    WINDOW* win = newwin(WIN_ROWS, WIN_COLS, 0, 0);
+    // define rows and columns
+    uint32_t rows = MIN_ROWS;
+    uint32_t columns = MIN_COLUMNS;
+
+    // request a window row,columns in size
+    WINDOW* win = newwin(rows,columns, 0, 0);
     if ((win = initscr()) == NULL) {
       fprintf(stderr, "[FAILED] Error initialising ncurses.\n");
       exit(1);
     }
-    
-    uint32_t rows,cols;
-    getmaxyx(win,rows,cols);
-    //mvprintw(1,0,"W:%d H:%d",cols,rows);
-    if ( cols < 132 || rows < 50) {
+
+    // check that it is at least that size
+    getmaxyx(win,rows,columns);
+    if ( columns < MIN_COLUMNS || rows < MIN_ROWS) {
       delwin(win);
       endwin();
-      fprintf(stderr, "\n\n[FAILED] Terminal Size less than 132x50.\n");
+      fprintf(stderr, "\n\n[FAILED] Terminal Size less than %dx%d.\n",MIN_COLUMNS,MIN_ROWS);
       exit(1);
     }
 
+    // check if term is color capable.  Will require it for interface.
     if (has_colors() == FALSE) {
       endwin();
       fprintf(stderr, "\n\n[FAILED] Your terminal does not support color\n");
@@ -52,14 +61,14 @@ int main(int argc, char** argv) {
     curs_set(0);
     noecho();
     wrefresh(win);
-    interface_display_header();
+    interface_display_header(0,0);
     wrefresh(win);
 
     cpu_init();
     cpu_reset();
     
     do {
-      interface_display_cpu();
+      interface_display_cpu(1,0);
       interface_display_page(7,1,0x0000);   // zero_page
       interface_display_page(7,76,0x0100);  // stack
       interface_display_page(26,1,0x8000);  //

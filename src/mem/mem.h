@@ -7,10 +7,6 @@
 #define TOTAL_MEM 1024 * 64
 
 struct mem {
-  //  uint8_t zero_page[0x100];
-  //  uint8_t stack[0x100];
-  //uint8_t last_six[0x06];
-  //uint8_t data[TOTAL_MEM - 0x206];
   uint8_t data[TOTAL_MEM];
 };
 

@@ -14,24 +14,24 @@ uint8_t QUIT = 0;
  * @return void
  * */
 void kinput_listen(void) {
-    char c = getch();
-
-    switch (c) {
-        case '\n':
-            cpu_exec();
-            break;
-
-        case 'r':
-            cpu_reset();
-            break;
-
-        case 'q':
-            QUIT = 1;
-            break;
-
-        default:
-            break;
-    }
+  char c = getch();
+  
+  switch (c) {
+  case '\n':
+    cpu_exec();
+    break;
+    
+  case 'r':
+    cpu_reset();
+    break;
+    
+  case 'q':
+    QUIT = 1;
+    break;
+    
+  default:
+    break;
+  }
 }
 
 // kinput_should_quit: sends quit signal by returning QUIT status

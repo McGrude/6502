@@ -4,13 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define WIN_ROWS 35
-#define WIN_COLS 50
-
-void interface_display_cpu(void);
-//void interface_display_mem(void);
-//void interface_display_zeropage(void);
-void interface_display_header(void);
-void interface_display_page(uint8_t y_loc, uint8_t x_loc, uint16_t addr);
-
+void interface_display_cpu(uint8_t row, uint8_t column);
+void interface_display_header(uint8_t row, uint8_t column);
+void interface_display_page(uint8_t row, uint8_t column, uint16_t addr);
 #endif
