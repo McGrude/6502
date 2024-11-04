@@ -71,8 +71,9 @@ int main(int argc, char** argv) {
       interface_display_cpu(1,0);
       interface_display_page(7,1,0x0000);   // zero_page
       interface_display_page(7,76,0x0100);  // stack
-      interface_display_page(26,1,0x8000);  //
-      interface_display_page(26,76,0xFF00); //
+      interface_display_page(26,1,0x8000);  // $8000
+      //      interface_display_page(26,76,0xFF00); // $FF00
+      interface_display_page(26,76,0x0400); 
       
       wrefresh(win);
       kinput_listen();
