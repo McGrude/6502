@@ -39,7 +39,6 @@ void interface_display_page(uint8_t row, uint8_t column, uint16_t addr) {
   uint8_t local_row = row;
   uint8_t local_column = column;
 
-  
   // print page address in upper left corner 
   mvprintw( local_row, local_column, "%04X | ", page);
 
@@ -59,10 +58,26 @@ void interface_display_page(uint8_t row, uint8_t column, uint16_t addr) {
   
   local_row = row+2;
   local_column = column+7;
-        
+
+
+  start_color();
+  init_pair(1,COLOR_YELLOW,COLOR_BLACK);
+
+  
   for ( local_index = 0 ; local_index < 256; local_index++ ) {
     // print value at the local_index'th offset into page
-    mvprintw(local_row, local_column, "%02X", mp->data[ page + local_index ] );
+    //mvprintw(local_row, local_column, "%02X", mp->data[ page + local_index ] );
+    
+    if (( page == 0x0100 && local_index == cpu.sp ) ||
+	( page + local_index == cpu.pc )
+	) {
+      attron(COLOR_PAIR(1)|A_BOLD);
+      mvprintw(local_row, local_column, "%02X", mp->data[ page + local_index ] );
+      attroff(COLOR_PAIR(1)|A_BOLD);
+    } else {
+      mvprintw(local_row, local_column, "%02X", mp->data[ page + local_index ] );
+    }
+
     // if this is not the first and
     // the next value should be on the following row
     if ( local_index != 0 && (local_index+1) % 16 == 0 ) {
