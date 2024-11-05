@@ -19,7 +19,7 @@ bin/emulator.out: $(sources) $(headers)
 
 example.bin: $(6502-sources)
 	$(VASM) $(VASMFLAGS) $(6502-sources)
-	mv 6502-src/a.out $@
+	mv a.out $@
 
 clean:
 	rm -rf bin example.bin

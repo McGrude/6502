@@ -61,14 +61,14 @@ int main(int argc, char** argv) {
     curs_set(0);
     noecho();
     wrefresh(win);
-    interface_display_header(0,0);
+    interface_display_header(1,1);
     wrefresh(win);
 
     cpu_init();
     cpu_reset();
     
     do {
-      interface_display_cpu(1,0);
+      interface_display_cpu(3,4);
       interface_display_page(7,1,0x0000);   // zero_page
       interface_display_page(7,76,0x0100);  // stack
       interface_display_page(26,1,0x8000);  // $8000

@@ -18,15 +18,18 @@ void interface_display_header(uint8_t row, uint8_t column) {
  * @return void
  * */
 void interface_display_cpu(uint8_t row, uint8_t column) {
-  mvprintw(row  , column, "A: 0x%02X", cpu.ac);
-  mvprintw(row+1, column, "X: 0x%02X", cpu.x);
-  mvprintw(row+2, column, "Y: 0x%02X", cpu.y );
 
-  mvprintw(row  , column+8, "PC: 0x%04X", cpu.pc);
-  mvprintw(row+1, column+8, "SP: 0x%02X", cpu.sp);
-  mvprintw(row+2, column+8, "SR: 0x%02X", cpu.sr);
+  uint8_t local_row = row;
+  uint8_t local_column = column;
+  
+  mvprintw(local_row  , local_column, "A: 0x%02X", cpu.ac);
+  mvprintw(local_row+1, local_column, "X: 0x%02X", cpu.x);
+  mvprintw(local_row+2, local_column, "Y: 0x%02X", cpu.y );
+
+  mvprintw(local_row  , local_column+10, "PC: 0x%04X", cpu.pc);
+  mvprintw(local_row+1, local_column+10, "SP: 0x%02X", cpu.sp);
+  mvprintw(local_row+2, local_column+10, "SR: 0x%02X", cpu.sr);
 }
-
 
 void interface_display_page(uint8_t row, uint8_t column, uint16_t addr) {
 
