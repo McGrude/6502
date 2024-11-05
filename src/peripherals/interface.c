@@ -29,97 +29,79 @@ void interface_display_cpu(uint8_t row, uint8_t column) {
 
 
 void interface_display_page(uint8_t row, uint8_t column, uint16_t addr) {
+
   struct mem* mp = mem_get_ptr();
-
   uint16_t page = (addr) & (uint16_t)0xFF00;
+  uint16_t local_index = 0;
+  uint8_t local_row = row;
+  uint8_t local_column = column;
+
   
-  mvprintw( row+1 , column, "%04X | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F",page);
-  mvprintw( row+2 , column, "     +-------------------------------------------------");
-  mvprintw( row+3 , column, "  00 | ");
-  mvprintw( row+4 , column, "  10 | ");
-  mvprintw( row+5 , column, "  20 | ");
-  mvprintw( row+6 , column, "  30 | ");
-  mvprintw( row+7 , column, "  40 | ");
-  mvprintw( row+8 , column, "  50 | ");
-  mvprintw( row+9 , column, "  60 | ");
-  mvprintw( row+10, column, "  70 | ");
-  mvprintw( row+11, column, "  80 | ");
-  mvprintw( row+12, column, "  90 | ");
-  mvprintw( row+13, column, "  A0 | ");
-  mvprintw( row+14, column, "  B0 | ");
-  mvprintw( row+15, column, "  C0 | ");
-  mvprintw( row+16, column, "  D0 | ");
-  mvprintw( row+17, column, "  E0 | ");
-  mvprintw( row+18, column, "  F0 | ");
+  // print page address in upper left corner 
+  mvprintw( local_row, local_column, "%04X | ", page);
+
+
+  local_row = row;
+  local_column = column;
+  mvprintw( local_row   , local_column+7, "00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F",page);
+  mvprintw( local_row+1 , local_column+5, "+-------------------------------------------------");
+
+
+  local_row = row+2;
+  local_column = column+2;
+  for ( local_index = 0; local_index < 16; local_index++ ) {
+    mvprintw( local_row+local_index , local_column, "%02X |",local_index*16);
+  }
+
   
-  uint8_t y = row+3;
-  uint8_t x = column+7;
+  local_row = row+2;
+  local_column = column+7;
         
-  for ( uint16_t index = 0 ; index < 256; index++ ) {
-    mvprintw(y, x, "%02X", mp->data[page+index]);
-    if ( index != 0 && (index+1) % 16 == 0 ) {
-      y += 1;
-      x = column+7;
+  for ( local_index = 0 ; local_index < 256; local_index++ ) {
+    // print value at the local_index'th offset into page
+    mvprintw(local_row, local_column, "%02X", mp->data[ page + local_index ] );
+    // if this is not the first and
+    // the next value should be on the following row
+    if ( local_index != 0 && (local_index+1) % 16 == 0 ) {
+      // increment the row by one
+      local_row += 1;
+      // and reset the column back to the left
+      local_column = column+7;
     } else {
-      x += 3;
+      // otherwise just move over three for next value
+      local_column += 3;
     }
   }
 
-  column = column+55;
-  mvprintw( row+1 , column, " 0123456789ABCDEF");
-  mvprintw( row+2 , column, "+----------------+");
+  local_column = column + 55;
+  local_row = row;
+
+  mvprintw( local_row   , local_column, "|0123456789ABCDEF|");
+  mvprintw( local_row+1 , local_column, "+----------------+");
   
-  for ( int i = 3; i <= 18; i ++ ) {
-    mvprintw( row+i , column, "|                |");
+  local_row = row + 2;
+  for ( int local_index = 0; local_index < 16; local_index ++ ) {
+    mvprintw( local_row + local_index , local_column, "|                |");
   }
 
-  y = row+3;
-  x = column+1;
-  for ( uint16_t index = 0 ; index < 256; index++ ) {
-
-    if ( ( mp->data[page+index] >= 0x20 ) &&  ( mp->data[page+index] <= 0x7E ) ) { 
-      mvprintw(y, x, "%c", mp->data[page+index]);
-    } else {
-      mvprintw(y, x, ".");
-    }
-
+  
+  local_row = row + 2;
+  local_column = column + 56;
+  
+  for ( local_index = 0 ; local_index < 256; local_index++ ) {
     
-    if ( index != 0 && ((index+1) % 16 == 0) ) {
-      y += 1;
-      x = column+1;
+    if ( ( mp->data[page+local_index] >= 0x20 ) &&  ( mp->data[page+local_index] <= 0x7E ) ) { 
+      mvprintw(local_row, local_column, "%c", mp->data[page+local_index]);
     } else {
-      x += 1;
+        mvprintw(local_row, local_column, ".");
+    }
+    
+    if ( local_index != 0 && ((local_index+1) % 16 == 0) ) {
+      local_row += 1;
+      local_column = column + 56;
+    } else {
+      local_column += 1;
     }
   }
-  
-  
-  
-
   
 }
-
-/*
-  
-          1111111111222222222233333333334444444444555555555566666666667777777777
-01234567890123456789012345678901234567890123456789012345678901234567890123456789
-  
- 0000 | 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F  0123456789ABCDEF 
-      +-------------------------------------------------+----------------+
-   00 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   10 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   20 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   30 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   40 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   50 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   60 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   70 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   80 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   90 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   A0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   B0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   C0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   D0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   E0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   F0 | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |                |
-   
-*/
