@@ -264,7 +264,7 @@ void reset(void) {
   cpu.ac = 0;
   cpu.x = 0;
   cpu.y = 0;
-  cpu.sp = 0xFD;
+  cpu.sp = 0xFF;
   cpu.sr = 0x00;
   
   addr_rel = 0x0000;
