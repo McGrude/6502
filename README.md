@@ -34,10 +34,9 @@ Or you can run the _shortcut_ script
 
 ```
 ./run.sh
+```
 
 Note: the run script will run make then if the exit code is not an error will run bin/emulator.out
-
-```
 
 ### Loading a custom program
 
