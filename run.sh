@@ -1,2 +1,3 @@
-make
-./bin/emulator.out
+#!/bin/sh
+
+make && ./bin/emulator.out
