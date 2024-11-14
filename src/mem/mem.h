@@ -10,8 +10,10 @@ struct mem {
   uint8_t data[TOTAL_MEM];
 };
 
-void mem_init(char* filename);
+void mem_init(void);
 int mem_dump(void);
+void load_program(uint16_t address, char* filename);
+		  
 struct mem* mem_get_ptr(void);
 
 #endif

@@ -1,5 +1,4 @@
 #include "mem.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,7 +24,7 @@ struct mem memory;
  * @param path Path to binary on hosst machine
  * @return void
  * */
-static void load_program(char* path) {
+void load_program(uint16_t address, char* path) {
   FILE* fp = fopen(path, "rb");
   
   if (fp == NULL) {
@@ -37,7 +36,9 @@ static void load_program(char* path) {
   stat(path, &st);
   size_t fsize = st.st_size;
   
-  size_t bytes_read = fread(memory.data + (0x8000), 1, sizeof(memory.data), fp);
+  size_t bytes_read = fread(memory.data + (address), 1, sizeof(memory.data), fp);
+
+  
   
   if (bytes_read != fsize) {
     fprintf( stderr, "[FAILED] Amount of bytes read doesn't match read file size.\n");
@@ -53,7 +54,7 @@ static void load_program(char* path) {
  * @param void
  * @return void
  * */
-void mem_init(char* filename) {
+void mem_init(void) {
   memset(memory.data, 0, sizeof(memory.data));
   // The 6502 reset vector is stored at 0xFFFC and 0xFFFD.  The CPU
   // jumps to the address stored there at reset.
@@ -65,12 +66,6 @@ void mem_init(char* filename) {
   memory.data[0xFFFC] = 0x00;
   memory.data[0xFFFD] = 0x80;
   
-  if (filename == NULL) {
-    fprintf(stderr, "[FAILED] No binary program was provided.\n");
-    exit(1);
-  } else {
-    load_program(filename);
-  }
 }
 
 /**
