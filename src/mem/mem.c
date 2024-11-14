@@ -62,9 +62,10 @@ void mem_init(void) {
   // Store 0x8000 at 6502 reset vector.  We'll remove later when
   // we have more binary loading in place.  We'll load a "rom"
   // in that space and it will store the reset vector @0xFFFC
-  
-  memory.data[0xFFFC] = 0x00;
-  memory.data[0xFFFD] = 0x80;
+
+  // dont load the reset vector as this comes from ROM now.
+  // memory.data[0xFFFC] = 0x00;
+  // memory.data[0xFFFD] = 0x80;
   
 }
 

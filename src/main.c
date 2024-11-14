@@ -189,6 +189,9 @@ int main(int argc, char* argv[]) {
   delwin(win);
   endwin();
   
-  mem_dump();
+  if ( dump_flag ) {
+    mem_dump();
+  }
+  
   return 0;
 }

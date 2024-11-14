@@ -15,6 +15,8 @@
 #include "../utils/misc.h"
 #include "cpu.h"
 
+#include "../mem/mem.h"
+
 /*
  * =============================================
  * MODES PROTOTYPES
@@ -256,9 +258,15 @@ static void set_flag(uint8_t flag, bool exp) {
  * @return void
  * */
 void reset(void) {
-  addr_abs = 0x8000;
   
-  cpu.pc = addr_abs;
+  //addr_abs = 0x8000;
+  //cpu.pc = addr_abs;
+
+  uint8_t low = get_mem(0xFFFC);
+  uint8_t high = get_mem(0xFFFD);
+    
+  cpu.pc = ( high << 8 | low );
+  
   debug_print("(reset) PC: 0x%X\n", cpu.pc);
   
   cpu.ac = 0;

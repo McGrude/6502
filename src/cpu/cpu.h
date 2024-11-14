@@ -42,5 +42,6 @@ uint8_t cpu_fetch(uint16_t addr);
 uint8_t cpu_write(uint16_t addr, uint8_t data);
 void cpu_exec(void);
 void cpu_init(void);
+int8_t get_mem(uint16_t addr);
 
 #endif
