@@ -175,8 +175,13 @@ int main(int argc, char* argv[]) {
     interface_display_page(7,76,0x0100);
     // Memory Display C - Program ( may follow )
     interface_display_page(26,1,0x8000);
+
+    
     // Memory Display D - need to update this to specify location on command line
-    interface_display_page(26,76,0x0400); 
+    ///interface_display_page(26,76,0x0400);
+
+    interface_display_page(26,76,0xFF00); 
+
     wrefresh(win);
     kinput_listen();
   } while (!kinput_should_quit());
