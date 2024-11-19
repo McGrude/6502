@@ -178,9 +178,10 @@ int main(int argc, char* argv[]) {
 
     
     // Memory Display D - need to update this to specify location on command line
-    ///interface_display_page(26,76,0x0400);
+    interface_display_page(26,76,0x0400);
 
-    interface_display_page(26,76,0xFF00); 
+    // Memory Display D - showing rom space
+    //interface_display_page(26,76,0xFF00); 
 
     wrefresh(win);
     kinput_listen();
